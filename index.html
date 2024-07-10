@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background: url('4.png') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 248, 220, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    h1 {
+      width: 100%;
+      text-align: center;
+      font-weight: 500;
+      font-size: 35px;
+      color: #36454F;
+      margin: 20px 0;
+      text-transform: uppercase;
+    }
+    .add-task {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    #task-input {
+      width: 60%;
+      font-size: 15px;
+      padding: 15px;
+      border: none;
+      background: #FFF8DC;
+      color: #333;
+      border-radius: 6px;
+      outline: none;
+      margin-right: 10px;
+    }
+    #task-input::placeholder {
+      color: #aaa;
+    }
+    #task-input:focus {
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    button[type="submit"] {
+      background: #FFAE42;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+      outline: none;
+    }
+    button[type="submit"]:hover {
+      background: #FF8C00;
+    }
+    .selection-holder {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #filter-tasks {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background: #FFF8DC;
+      color: #FFAE42;
+      outline: none;
+    }
+    .task-heading {
+      width: 100%;
+      font-size: 25px;
+      color: #36454F;
+      font-weight: 500;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .task-headings {
+        margin-left: -30px;
+        width: 100%;
+        text-align: center;
+        font-weight: 500;
+        font-size: 20px;
+        color: #36454F;
+        margin: 20px 0;
+        text-transform: uppercase;
+      }
+    .task-container {
+      list-style: none;
+      padding: 0;
+      width: 100%;
+    }
+    .task-item {
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #CEF6F5;
+    }
+    .task-text {
+      flex: 1;
+      font-size: 18px;
+      color: #333;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+    .done-input {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+    .task-item button {
+      background-color: transparent;
+      color: #333;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      margin-left: 10px;
+    }
+    .task-item button:hover {
+      color: #FF8C00;
+    }
+    .task-item:nth-child(even) {
+      background-color: #F7D6E0;
+    }
+    .calendar-container {
+      width: 30%; 
+      margin-top: 20px;
+      margin-left: 20px; 
+      text-align: center;
+    }
+    .calendar {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 10px;
+      border-radius: 10px; 
+      overflow: hidden; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #FFF8DC;
+    }
+    .calendar th, .calendar td {
+      padding: 10px;
+      text-align: center;
+      border: none;
+    }
+    .calendar th {
+      background-color: #FFAE42;
+      color: #fff;
+      padding: 12px;
+      font-weight: bold;
+    }
+    .calendar td {
+      background-color: #FFF8DC;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: #555;
+    }
+    .calendar td.today {
+      background-color: #FFD700;
+      border-radius: 50px;
+    }
+    .calendar td:hover {
+      background-color: #FF8C00;
+    }
+    .sticky-note {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #FFDAB9;
+      border: 1px solid #FFA07A;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      resize: vertical;
+      min-height: 100px;
+    }
+    .sticky-note {
+      margin-top: 20px;
+      padding: 20px;
+      background: #FFFAF0; 
+      border: 1px solid #FFDAB9; 
+      border-left: 8px solid #FFA07A;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sticky-note textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      color: #333;
+      outline: none;
+      resize: none;
+      font-family: 'Arial', sans-serif;
+      padding: 10px;
+      line-height: 1.6;
+    }
+
+    .sticky-note::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      background: #FFA07A;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .sticky-note::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: #eaad95;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    
+    @media(max-width: 600px) {
+      .container {
+        position: absolute;
+        width: 340px;
+        padding: 10px;
+        margin-top: 40px;
+        margin-left: -5px;
+        flex-direction: column;
+        align-items: center;
+      }
+      .task-headings {
+        margin-left: -30px;
+        width: 100%;
+        text-align: center;
+        font-weight: 500;
+        font-size: 20px;
+        color: #36454F;
+        margin: 20px 0;
+        text-transform: uppercase;
+      }
+      .add-task {
+        flex-direction: column;
+        align-items: stretch;
+        left: 20px;
+        width: 98%;
+      }
+      #task-input {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+      .task-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .task-item button {
+        font-size: 12px;
+        padding: 3px;
+        margin: 2px 0px;
+      }
+      .task-text {
+        flex: 1;
+        margin-top: 3px;
+        margin-right: 5px;
+        font-size: 15px;
+      }
+      button[type="submit"] {
+        width: 100%;
+      }
+      .selection-holder {
+        margin-bottom: 10px;
+      }
+      .task-heading {
+        margin-top: 30px;
+        margin-left: 118px;
+      }
+      .calendar-container {
+        width: 120px;
+        padding: 10px;
+        margin-top: calc(358px + var(--task-list-height, 0px));
+        margin-left: -240px;
+        transition: margin-top 0.3s ease; 
+      }
+      .sticky-note {
+        margin-top: 30px;
+        width: 340px;
+        margin-left: 3px;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .container {
+        padding: 10px 40px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 30px;
+      }
+
+      .calendar-container {
+        width: 100%; 
+        max-width: 1200px;
+        padding: 20px;
+        margin: 30px 0;
+        margin-top: -5px;
+      }
+
+      .task-list {
+        width: 100%; 
+        max-width: 1000px;
+      }
+      
+      .sticky-note {
+        margin-top: 30px;
+        width: 100%; 
+        max-width: 600px; 
+        margin-left: auto; 
+        margin-right: auto; 
+        padding: 20px;
+        background: #FFFAF0;
+        border: 1px solid #FFDAB9;
+        border-left: 8px solid #FFA07A;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .sticky-note textarea {
+        height: 200px; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task List</h1>
+    <div class="add-task">
+      <form id="task-form">
+        <input type="text" id="task-input" placeholder="Enter your task here">
+        <button type="submit">Add Task</button>
+      </form>
+    </div>
+    <div class="selection-holder">
+      <select id="filter-tasks">
+        <option value="all">All tasks</option>
+        <option value="completed">Completed tasks</option>
+        <option value="uncompleted">Uncompleted tasks</option>
+      </select>
+    </div>
+    <h2 class="task-headings">Tasks</h2>
+    <ul id="task-list" class="task-container">
+      <!-- Tasks added here -->
+    </ul>
+  </div>
+
+  <!-- Calendar -->
+  <div class="calendar-container">
+    <h2 class="task-heading">Calendar</h2>
+    <table class="calendar" id="calendar">
+      <thead>
+        <tr>
+          <th colspan="7">
+            <button id="prev-month">&lt;</button>
+            <span id="current-month-year">June 2024</span>
+            <button id="next-month">&gt;</button>
+          </th>
+        </tr>
+        <tr>
+          <th>Sun</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+        </tr>
+      </thead>
+      <tbody id="calendar-body">
+        <!-- Calendar dates here -->
+      </tbody>
+    </table>
+
+    <!-- Sticky Note ito-->
+    <div class="sticky-note">
+      <textarea id="sticky-note-text" placeholder="Write your notes here..."></textarea>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('task-form');
+      const taskInput = document.getElementById('task-input');
+      const taskList = document.getElementById('task-list');
+      const filterOption = document.getElementById('filter-tasks');
+      const calendarBody = document.getElementById('calendar-body');
+      const currentMonthYear = document.getElementById('current-month-year');
+      const prevMonthButton = document.getElementById('prev-month');
+      const nextMonthButton = document.getElementById('next-month');
+
+      let currentMonth = new Date().getMonth();
+      let currentYear = new Date().getFullYear();
+
+      function generateCalendar(month, year) {
+        calendarBody.innerHTML = '';
+        let date = 1;
+        const firstDay = new Date(year, month).getDay();
+        const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+        for (let i = 0; i < 6; i++) {
+          let row = document.createElement('tr');
+
+          for (let j = 0; j < 7; j++) {
+            if (i === 0 && j < firstDay) {
+              let cell = document.createElement('td');
+              row.appendChild(cell);
+            } else if (date > daysInMonth) {
+              break;
+            } else {
+              let cell = document.createElement('td');
+              cell.textContent = date;
+
+              if (year === new Date().getFullYear() && month === new Date().getMonth() && date === new Date().getDate()) {
+                cell.classList.add('today');
+              }
+
+              row.appendChild(cell);
+              date++;
+            }
+          }
+
+          calendarBody.appendChild(row);
+
+          if (date > daysInMonth) {
+            break;
+          }
+        }
+
+        currentMonthYear.textContent = `${getMonthName(month)} ${year}`;
+      }
+
+      function getMonthName(month) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[month];
+      }
+
+      function addTask(e) {
+        e.preventDefault();
+        const taskText = taskInput.value.trim();
+        if (taskText !== '') {
+          const liItem = document.createElement('li');
+          liItem.classList.add('task-item');
+
+          const taskTextInput = document.createElement('input');
+          taskTextInput.type = 'text';
+          taskTextInput.classList.add('task-text');
+          taskTextInput.value = taskText;
+          taskTextInput.setAttribute('readonly', 'readonly');
+          liItem.appendChild(taskTextInput);
+
+          const editButton = document.createElement('button');
+          editButton.classList.add('edit-button');
+          editButton.textContent = 'Edit';
+          liItem.appendChild(editButton);
+
+          const doneButton = document.createElement('button');
+          doneButton.classList.add('done-button');
+          doneButton.textContent = 'Done';
+          liItem.appendChild(doneButton);
+
+          const deleteButton = document.createElement('button');
+          deleteButton.classList.add('delete-button');
+          deleteButton.textContent = 'Delete';
+          liItem.appendChild(deleteButton);
+
+          taskList.appendChild(liItem);
+          taskInput.value = '';
+
+          if (taskList.children.length % 2 === 0) {
+            liItem.style.backgroundColor = '#F7D6E0'; 
+          } else {
+            liItem.style.backgroundColor = '#CEF6F5'; 
+          }
+
+          updateTaskListHeight();
+        } else {
+          alert('Please enter a task.');
+        }
+      }
+
+      function taskActions(event) {
+        const target = event.target;
+        const listItem = target.parentElement;
+
+        if (target.classList.contains('delete-button')) {
+          listItem.remove();
+          updateTaskListHeight();
+        } else if (target.classList.contains('done-button')) {
+          listItem.classList.toggle('task-done');
+          const taskTextInput = listItem.querySelector('.task-text');
+          taskTextInput.classList.toggle('done-input');
+          target.disabled = true;
+          target.previousElementSibling.disabled = true;
+        } else if (target.classList.contains('edit-button')) {
+          const taskTextInput = listItem.querySelector('.task-text');
+          if (target.textContent === 'Edit') {
+            target.textContent = 'Save';
+            taskTextInput.removeAttribute('readonly');
+            taskTextInput.focus();
+          } else {
+            target.textContent = 'Edit';
+            taskTextInput.setAttribute('readonly', 'readonly');
+          }
+        }
+      }
+
+      function filterTasks(event) {
+        const tasks = taskList.getElementsByClassName('task-item');
+        const filterValue = event.target.value;
+
+        Array.from(tasks).forEach(function(task, index) {
+          switch (filterValue) {
+            case 'all':
+              task.style.display = 'flex';
+              break;
+            case 'completed':
+              if (task.classList.contains('task-done')) {
+                task.style.display = 'flex';
+              } else {
+                task.style.display = 'none';
+              }
+              break;
+            case 'uncompleted':
+              if (!task.classList.contains('task-done')) {
+                task.style.display = 'flex';
+              } else {
+                task.style.display = 'none';
+              }
+              break;
+          }
+        });
+      }
+
+      function navigateMonth(e) {
+        if (e.target === prevMonthButton) {
+          currentMonth--;
+          if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+          }
+        } else if (e.target === nextMonthButton) {
+          currentMonth++;
+          if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+          }
+        }
+        generateCalendar(currentMonth, currentYear);
+      }
+
+      function updateTaskListHeight() {
+        const taskListHeight = taskList.offsetHeight;
+        document.documentElement.style.setProperty('--task-list-height', `${taskListHeight}px`);
+      }
+
+      form.addEventListener('submit', addTask);
+      taskList.addEventListener('click', taskActions);
+      filterOption.addEventListener('change', filterTasks);
+      prevMonthButton.addEventListener('click', navigateMonth);
+      nextMonthButton.addEventListener('click', navigateMonth);
+
+      generateCalendar(currentMonth, currentYear);
+
+      const stickyNoteTextarea = document.getElementById('sticky-note-text');
+
+      stickyNoteTextarea.addEventListener('input', function() {
+        localStorage.setItem('stickyNoteContent', stickyNoteTextarea.value);
+      });
+
+      const savedStickyNoteContent = localStorage.getItem('stickyNoteContent');
+      if (savedStickyNoteContent) {
+        stickyNoteTextarea.value = savedStickyNoteContent;
+      }
+
+      window.addEventListener('resize', updateTaskListHeight);
+      updateTaskListHeight(); // Initial call to set the height
+    });
+
+  </script>
+</body>
+</html>
